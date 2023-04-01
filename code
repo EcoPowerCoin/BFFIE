@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+
+class Friend {
+  String name;
+  int interactions;
+  bool isHungry;
+
+  Friend({required this.name, this.interactions = 0, this.isHungry = false});
+}
+
+class ChatApp extends StatefulWidget {
+  @override
+  _ChatAppState createState() => _ChatAppState();
+}
+
+class _ChatAppState extends State<ChatApp> {
+  List<Friend> _friends = [
+    Friend(name: 'Alice'),
+    Friend(name: 'Bob'),
+    Friend(name: 'Charlie'),
+    Friend(name: 'Dave'),
+  ];
+
+  void _updateInteraction(int index) {
+    setState(() {
+      _friends[index].interactions++;
+      _friends[index].isHungry = true;
+    });
+  }
+
+  void _feedFriend(int index) {
+    setState(() {
+      _friends[index].isHungry = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Chat App'),
+        ),
+        body: ListView.builder(
+          itemCount: _friends.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(_friends[index].name),
+              subtitle: Text('Interactions: ${_friends[index].interactions}'),
+              trailing: _friends[index].isHungry
+                  ? ElevatedButton(
+                      onPressed: () => _feedFriend(index),
+                      child: Text('Feed'),
+                    )
+                  : null,
+              onTap: () => _updateInteraction(index),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(ChatApp());
+}
